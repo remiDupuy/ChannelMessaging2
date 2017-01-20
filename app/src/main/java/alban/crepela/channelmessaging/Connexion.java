@@ -24,16 +24,18 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by crepela on 20/01/2017.
  */
-public class Connexion  extends AsyncTask<String,Integer, Reponse> {
+public class Connexion  extends AsyncTask<Void,Integer, String> {
     private Context myContext;
-    /*
-    private String id;
-    private String mdp;*/
+    private HashMap<String,String> params = new HashMap<String,String>();
+    private String url;
+
     private ArrayList<OnDownloadCompleteListener> listeners = new ArrayList<OnDownloadCompleteListener>();
 
-    public Connexion(Context myContext)
+    public Connexion(Context myContext, HashMap<String,String> params, String url)
     {
         this.myContext = myContext;
+        this.params = params;
+        this.url = url;
     }
 
     @Override
@@ -50,28 +52,16 @@ public class Connexion  extends AsyncTask<String,Integer, Reponse> {
     }
 
     @Override
-    protected Reponse doInBackground(String... arg0) {
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("username",arg0[0]);
-        params.put("password",arg0[1]);
-        String response = this.performPostCall("http://www.raphaelbischof.fr/messaging/?function=connect", params);
-
-        Gson gson = new Gson();
-        Reponse obj = gson.fromJson(response, Reponse.class);
-
-        return obj;
+    protected String doInBackground(Void... arg0) {
+        String response = this.performPostCall(this.url, this.params);
+        return response;
     }
 
     @Override
-    protected void onPostExecute(Reponse result) {
-        if(result.getResponse().equals("Ok"))
-            Toast.makeText(myContext, "Connecté", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(myContext, "Erreur de connexion", Toast.LENGTH_SHORT).show();
-
+    protected void onPostExecute(String result) {
         for (OnDownloadCompleteListener oneListener : listeners)
         {
-            oneListener.onDownloadCompleted(result.getResponse());
+            oneListener.onDownloadCompleted(result);
         }
     }
 
