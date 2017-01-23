@@ -4,7 +4,7 @@ package alban.crepela.channelmessaging;
  * Created by crepela on 20/01/2017.
  */
 public class Channel {
-    private int channelID;
+    private String channelID;
     private String name;
     private String connectedusers;
 
@@ -17,7 +17,7 @@ public class Channel {
                 '}';
     }
 
-    public Channel(String connectedusers, String name, int channelID) {
+    public Channel(String connectedusers, String name, String channelID) {
         this.connectedusers = connectedusers;
         this.name = name;
         this.channelID = channelID;
@@ -32,11 +32,11 @@ public class Channel {
         this.connectedusers = connectedusers;
     }
 
-    public int getChannelID() {
+    public String getChannelID() {
         return channelID;
     }
 
-    public void setChannelID(int channelID) {
+    public void setChannelID(String channelID) {
         this.channelID = channelID;
     }
 

@@ -57,9 +57,10 @@ public class ChannelListActivity extends AppCompatActivity implements AdapterVie
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Channel channel = (Channel)channels.getItemAtPosition(position);
-        Intent intent = new Intent(getApplicationContext(),ChannelActivity.class);
-        intent.putExtra("channelId", channel.getChannelID());
-        startActivity(intent);
+        Intent intentMsg = new Intent(getApplicationContext(),ChannelActivity.class);
+        intentMsg.putExtra("channelID", channel.getChannelID());
+        System.out.println(channel.getChannelID());
+        startActivity(intentMsg);
     }
 
 

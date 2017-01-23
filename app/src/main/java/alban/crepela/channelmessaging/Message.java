@@ -8,7 +8,7 @@ import java.util.Date;
 public class Message {
     private int userID;
     private String message;
-    private Date date;
+    private String date;
     private String imageUrl;
 
     public Message() {
@@ -30,11 +30,11 @@ public class Message {
         this.message = message;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
