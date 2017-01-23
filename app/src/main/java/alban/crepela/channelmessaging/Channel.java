@@ -6,7 +6,7 @@ package alban.crepela.channelmessaging;
 public class Channel {
     private int channelID;
     private String name;
-    private int connectedusers;
+    private String connectedusers;
 
     @Override
     public String toString() {
@@ -17,18 +17,18 @@ public class Channel {
                 '}';
     }
 
-    public Channel(int connectedusers, String name, int channelID) {
+    public Channel(String connectedusers, String name, int channelID) {
         this.connectedusers = connectedusers;
         this.name = name;
         this.channelID = channelID;
     }
 
-    public int getConnectedusers() {
+    public String getConnectedusers() {
 
         return connectedusers;
     }
 
-    public void setConnectedusers(int connectedusers) {
+    public void setConnectedusers(String connectedusers) {
         this.connectedusers = connectedusers;
     }
 

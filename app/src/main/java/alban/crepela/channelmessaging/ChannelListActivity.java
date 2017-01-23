@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -13,7 +15,7 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 
-public class ChannelListActivity extends AppCompatActivity {
+public class ChannelListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private ListView channels;
 
     @Override
@@ -22,6 +24,7 @@ public class ChannelListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_channel_list);
 
         channels = (ListView) findViewById(R.id.listViewChannels);
+        channels.setOnItemClickListener(this);
 
         SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, 0);
         String accesstoken = settings.getString("accesstoken","");
@@ -41,20 +44,23 @@ public class ChannelListActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 ChannelsContainer obj = gson.fromJson(result, ChannelsContainer.class);
 
-                System.out.println(obj);
 
-                channels.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, obj.getChannels()));
-                /*
-                if(obj.getResponse().equals("Ok")){
-                    Toast.makeText(getApplicationContext(), "Connecté", Toast.LENGTH_SHORT).show();
-                    Intent myIntent = new Intent(getApplicationContext(),ChannelListActivity.class);
-                    startActivity(myIntent);
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Erreur de connexion", Toast.LENGTH_SHORT).show();
-                }
-                */
+                ChannelArrayAdapter adapter = new ChannelArrayAdapter(getApplicationContext(), obj.getChannels());
+                channels.setAdapter(adapter);
+
             }
         });
+
+
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Channel channel = (Channel)channels.getItemAtPosition(position);
+        Intent intent = new Intent(getApplicationContext(),ChannelActivity.class);
+        intent.putExtra("channelId", channel.getChannelID());
+        startActivity(intent);
+    }
+
+
 }

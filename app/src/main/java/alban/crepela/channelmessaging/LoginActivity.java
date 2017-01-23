@@ -38,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
                 params.put("password",mdp.getText().toString());
 
                 Connexion connexion = new Connexion(getApplicationContext(), params, "http://www.raphaelbischof.fr/messaging/?function=connect");
-                connexion.execute();
 
                 connexion.setOnDownloadCompleteListener(new  OnDownloadCompleteListener() {
                     @Override
@@ -65,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+                connexion.execute();
             }
         });
     }
