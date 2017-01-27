@@ -10,6 +10,17 @@ public class Message {
     private String message;
     private String date;
     private String imageUrl;
+    private String username;
+
+    public String getName() {
+        return username;
+    }
+
+    public void setName(String name) {
+        this.username = name;
+    }
+
+
 
     public Message() {
     }

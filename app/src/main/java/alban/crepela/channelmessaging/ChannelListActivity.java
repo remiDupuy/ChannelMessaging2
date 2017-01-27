@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import java.util.HashMap;
 
 public class ChannelListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private ListView channels;
+    private Button btnAmis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,16 @@ public class ChannelListActivity extends AppCompatActivity implements AdapterVie
             }
         });
 
+        btnAmis = (Button)findViewById(R.id.btnAmis);
+
+        btnAmis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent friendIntent = new Intent(getApplicationContext(), AmisListActivity.class);
+                startActivity(friendIntent);
+            }
+        });
+
 
     }
 
@@ -59,9 +71,9 @@ public class ChannelListActivity extends AppCompatActivity implements AdapterVie
         Channel channel = (Channel)channels.getItemAtPosition(position);
         Intent intentMsg = new Intent(getApplicationContext(),ChannelActivity.class);
         intentMsg.putExtra("channelID", channel.getChannelID());
-        System.out.println(channel.getChannelID());
         startActivity(intentMsg);
     }
+
 
 
 }

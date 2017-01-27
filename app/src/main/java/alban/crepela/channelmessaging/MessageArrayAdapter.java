@@ -1,6 +1,7 @@
 package alban.crepela.channelmessaging;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,10 +37,14 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
 
         // Populate the data into the template view using the data object
         txtMsg.setText(message.getUserID()+" : "+message.getMessage());
-        txtDate.setText(message.getDate().toString());
+        txtDate.setText(message.getDate().toString() + " - " + message.getName());
 
-
-        new DownloadImageTask(img).execute(message.getImageUrl());
+        if(ChannelActivity.listBitmaps.containsKey((message.getImageUrl()))) {
+            Bitmap imgDl = ChannelActivity.listBitmaps.get(message.getImageUrl());
+            img.setImageBitmap(GetRoundedCornerBitmap.rounded(imgDl));
+        }
+        else
+            new DownloadImageTask(img).execute(message.getImageUrl());
         // Return the completed view to render on screen
         return convertView;
 

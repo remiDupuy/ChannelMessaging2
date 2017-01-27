@@ -5,13 +5,14 @@
     android:weightSum="1">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="84dp"
+        android:layout_height="76dp"
         android:id="@+id/imageView"
         android:minHeight="150dp"
         android:minWidth="150dp"
         android:paddingTop="15dp"
-        android:paddingLeft="15dp" />
+        android:paddingLeft="15dp"
+        android:layout_marginLeft="20dp" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -34,7 +35,7 @@
             android:textColor="@android:color/black"
             android:layout_height="wrap_content"
             android:id="@+id/textViewDate"
-            android:text="nbPers"
+            android:text="date - nom"
             android:paddingLeft="25dp" />
 
     </LinearLayout>
