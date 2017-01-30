@@ -4,7 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,18 +20,22 @@ import android.widget.ListView;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 
 
 public class ChannelActivity extends AppCompatActivity {
 
+    final private int PICTURE_REQUEST_CODE = 1;
     private ListView messages;
     public static HashMap<String, Bitmap> listBitmaps = new HashMap<>();
 
 
     private Button btnSend;
     private EditText txtSend;
+    private FloatingActionButton btnPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +130,23 @@ public class ChannelActivity extends AppCompatActivity {
                 connexion.execute();
 
 
+                btnPhoto = (FloatingActionButton)findViewById(R.id.btnPhoto);
+                btnPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                       // Uri uri = Uri.parse(new File(Environment.getExternalStorageDirectory()+"/image").toString());
+                        Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory()+"/image"));
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri); //Emplacement de l’image stockée
+                        startActivityForResult(intent, PICTURE_REQUEST_CODE);
+
+
+                    }
+                });
+
+
+
                 handler.postDelayed(this, 1000);
             }
         };
@@ -132,5 +157,12 @@ public class ChannelActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        System.out.println(data);
     }
 }
