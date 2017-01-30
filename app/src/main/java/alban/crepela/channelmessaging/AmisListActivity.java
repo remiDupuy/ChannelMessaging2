@@ -34,7 +34,7 @@ public class AmisListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Friend friend = (Friend)gridViewFriends.getItemAtPosition(position);
                 Intent mpIntent = new Intent(getApplicationContext(), PrivateMsgActivity.class);
-                mpIntent.putExtra("userid", friend.getId());
+                mpIntent.putExtra("userid", Integer.toString(friend.getId()));
                 startActivity(mpIntent);
             }
         });

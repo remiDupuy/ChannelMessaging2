@@ -6,11 +6,11 @@ import java.util.UUID;
  * Created by dupuyr on 27/01/2017.
  */
 public class Friend {
-    private UUID id;
+    private int id;
     private String name;
     private String imgUrl;
 
-    public Friend(UUID id, String name, String imgUrl) {
+    public Friend(int id, String name, String imgUrl) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
@@ -33,11 +33,11 @@ public class Friend {
         this.name = name;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 

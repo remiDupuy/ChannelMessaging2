@@ -33,20 +33,19 @@ public class UserDataSource {
     }
 
     public Friend cursorToFriend(Cursor cursor) {
-        Friend friend = new Friend(UUID.fromString(cursor.getString(0)), cursor.getString(1), cursor.getString(2));
+        Friend friend = new Friend(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
         return friend;
     }
 
-    public Friend createFriend(String nom, String imgUrl) {
+    public Friend createFriend(int userid, String nom, String imgUrl) {
         ContentValues values = new ContentValues();
         values.put(FriendsDB.KEY_NAME, nom);
         values.put(FriendsDB.KEY_IMG, imgUrl);
-        UUID newID = UUID.randomUUID();
-        values.put(FriendsDB.KEY_ID, newID.toString());
+        values.put(FriendsDB.KEY_ID, userid);
         database.insert(FriendsDB.USER_TABLE_NAME, null,
                 values);
         Cursor cursor = database.query(FriendsDB.USER_TABLE_NAME,
-                allColumns, FriendsDB.KEY_ID + " = \"" + newID.toString()+"\"", null,
+                allColumns, FriendsDB.KEY_ID + " = \"" +userid+"\"", null,
                 null, null, null);
         cursor.moveToFirst();
         Friend newFriend = cursorToFriend(cursor);

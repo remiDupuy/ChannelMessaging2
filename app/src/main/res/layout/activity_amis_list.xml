@@ -16,5 +16,5 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:numColumns="4" />
+        android:numColumns="3" />
 </RelativeLayout>

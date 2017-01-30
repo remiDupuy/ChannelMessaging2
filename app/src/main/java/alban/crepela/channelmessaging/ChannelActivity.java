@@ -76,7 +76,7 @@ public class ChannelActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         UserDataSource db = new UserDataSource(ChannelActivity.this);
                                         db.open();
-                                        Friend friend = db.createFriend(message.getName(), message.getImageUrl());
+                                        Friend friend = db.createFriend(message.getUserID(), message.getName(), message.getImageUrl());
                                         System.out.println(friend);
                                         db.close();
                                     }

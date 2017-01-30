@@ -6,27 +6,37 @@ import java.util.StringJoiner;
  * Created by dupuyr on 27/01/2017.
  */
 public class PrivateMsg {
-    private String userid;
-    private String sendbyme;
+    private String userID;
+    private int sendbyme;
     private String username;
     private String message;
     private String date;
     private String imageUrl;
     private String everRead;
 
+    public PrivateMsg(String userID, int sendbyme, String username, String message, String date, String imageUrl, String everRead) {
+        this.userID = userID;
+        this.sendbyme = sendbyme;
+        this.username = username;
+        this.message = message;
+        this.date = date;
+        this.imageUrl = imageUrl;
+        this.everRead = everRead;
+    }
+
     public String getUserid() {
-        return userid;
+        return userID;
     }
 
     public void setUserid(String userid) {
-        this.userid = userid;
+        this.userID = userid;
     }
 
-    public String getSendbyme() {
+    public int getSendbyme() {
         return sendbyme;
     }
 
-    public void setSendbyme(String sendbyme) {
+    public void setSendbyme(int sendbyme) {
         this.sendbyme = sendbyme;
     }
 

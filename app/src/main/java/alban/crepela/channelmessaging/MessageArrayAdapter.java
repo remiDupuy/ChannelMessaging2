@@ -33,7 +33,7 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
         // Lookup view for data population
         TextView txtMsg = (TextView) convertView.findViewById(R.id.textViewMessage);
         TextView txtDate = (TextView) convertView.findViewById(R.id.textViewDate);
-        ImageView img = (ImageView)convertView.findViewById(R.id.imageView);
+        ImageView img = (ImageView)convertView.findViewById(R.id.ImageView);
 
         // Populate the data into the template view using the data object
         txtMsg.setText(message.getUserID()+" : "+message.getMessage());

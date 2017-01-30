@@ -30,7 +30,7 @@ public class FriendArrayAdapter extends ArrayAdapter<Friend> {
         }
         // Lookup view for data population
         TextView txtViewName = (TextView) convertView.findViewById(R.id.textViewName);
-        ImageView imgView = (ImageView) convertView.findViewById(R.id.imageViewFriend);
+        ImageView imgView = (ImageView) convertView.findViewById(R.id.ImageViewFriend);
 
         // Populate the data into the template view using the data object
         txtViewName.setText(friend.getName());

@@ -6,24 +6,17 @@ import java.util.List;
  * Created by dupuyr on 27/01/2017.
  */
 public class PrivateMsgContainer {
-    private List<PrivateMsg> listPrivateMsgs;
+    private List<PrivateMsg> messages;
 
-    public PrivateMsgContainer(List<PrivateMsg> listPrivateMsgs) {
-        this.listPrivateMsgs = listPrivateMsgs;
+    public List<PrivateMsg> getMessages() {
+        return messages;
     }
 
-    @Override
-    public String toString() {
-        return "PrivateMsgContainer{" +
-                "listPrivateMsgs=" + listPrivateMsgs +
-                '}';
+    public void setMessages(List<PrivateMsg> messages) {
+        this.messages = messages;
     }
 
-    public List<PrivateMsg> getListPrivateMsgs() {
-        return listPrivateMsgs;
-    }
-
-    public void setListPrivateMsgs(List<PrivateMsg> listPrivateMsgs) {
-        this.listPrivateMsgs = listPrivateMsgs;
+    public PrivateMsgContainer(List<PrivateMsg> messages) {
+        this.messages = messages;
     }
 }

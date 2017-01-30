@@ -15,7 +15,7 @@ public class FriendsDB extends SQLiteOpenHelper {
     public static final String KEY_ID = "userid";
     public static final String KEY_NAME = "username";
     public static final String KEY_IMG = "imageurl";
-    private static final String USER_TABLE_CREATE = "CREATE TABLE " + USER_TABLE_NAME + " (" + KEY_ID + " STRING, " +
+    private static final String USER_TABLE_CREATE = "CREATE TABLE " + USER_TABLE_NAME + " (" + KEY_ID + " INTEGER, " +
             KEY_NAME + " TEXT, " + KEY_IMG + " TEXT);";
 
 
