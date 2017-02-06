@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -34,7 +33,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -164,7 +162,7 @@ public class ChannelActivity extends AppCompatActivity {
 
 
 
-        btnPhoto = (FloatingActionButton)findViewById(R.id.btnPhoto);
+        btnPhoto = (FloatingActionButton)findViewById(R.id.btnGPS);
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

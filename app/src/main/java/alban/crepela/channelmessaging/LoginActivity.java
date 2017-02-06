@@ -3,6 +3,7 @@ package alban.crepela.channelmessaging;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText id;
     private EditText mdp;
     private Button btnValider;
+    private FloatingActionButton btnGPS;
 
     public static final String PREFS_NAME = "MyPrefsFile";
 
@@ -67,5 +69,15 @@ public class LoginActivity extends AppCompatActivity {
                 connexion.execute();
             }
         });
+
+        btnGPS = (FloatingActionButton)findViewById(R.id.btnGPS);
+        btnGPS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getApplicationContext(), GPSActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
     }
 }

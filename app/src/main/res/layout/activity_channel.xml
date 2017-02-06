@@ -17,7 +17,7 @@ tools:context=".PrivateMsgActivity">
     android:layout_alignParentTop="true"
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
-    android:layout_above="@+id/btnPhoto" />
+    android:layout_above="@+id/btnGPS" />
 
 <android.support.design.widget.FloatingActionButton
     android:src="@android:drawable/ic_menu_camera"
@@ -27,7 +27,7 @@ tools:context=".PrivateMsgActivity">
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
-    android:id="@+id/btnPhoto"
+    android:id="@+id/btnGPS"
     />
 
 <EditText
