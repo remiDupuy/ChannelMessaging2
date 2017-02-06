@@ -34,7 +34,6 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
-        Bitmap roundimg = GetRoundedCornerBitmap.rounded(result);
-        bmImage.setImageBitmap(roundimg);
+        bmImage.setImageBitmap(result);
     }
 }

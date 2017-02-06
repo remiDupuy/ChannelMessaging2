@@ -11,6 +11,17 @@ public class Message {
     private String date;
     private String imageUrl;
     private String username;
+    private String messageImageUrl;
+
+
+
+    public String getMessageImageUrl() {
+        return messageImageUrl;
+    }
+
+    public void setMessageImageUrl(String messageImageUrl) {
+        this.messageImageUrl = messageImageUrl;
+    }
 
     public String getName() {
         return username;
