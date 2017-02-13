@@ -15,9 +15,11 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-public class GPSActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+public class GPSActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -33,7 +35,7 @@ public class GPSActivity extends ActionBarActivity implements GoogleApiClient.Co
 
                 } else {
 
-                    finish();
+                    //finish();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
@@ -59,18 +61,42 @@ public class GPSActivity extends ActionBarActivity implements GoogleApiClient.Co
         mGoogleApiClient.connect();
 
 
+    }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, (LocationListener) this);
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-        ActivityCompat.requestPermissions(GPSActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION },1);
+        ActivityCompat.requestPermissions(GPSActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         int permissionCheck = ContextCompat.checkSelfPermission(GPSActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        //+Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        //Correspond à l’intervalle moyen de temps entre chaque mise à jour des coordonnées
+        mLocationRequest.setFastestInterval(5000);
+        //Correspond à l’intervalle le plus rapide entre chaque mise à jour des coordonnées
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        //Définit la demande de mise à jour avec un niveau de précision maximal
+
+
+        //noinspection MissingPermission
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Location mCurrentLocation = location;
+            }
+        });
+
+
 
     }
+
+
 
     @Override
     public void onConnectionSuspended(int i) {
