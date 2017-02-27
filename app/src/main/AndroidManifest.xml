@@ -37,7 +37,8 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".GPSActivity"></activity>
+        <activity android:name=".GPSActivity" />
+        <activity android:name=".fragments.MessageFragment"></activity>
     </application>
 
 </manifest>
