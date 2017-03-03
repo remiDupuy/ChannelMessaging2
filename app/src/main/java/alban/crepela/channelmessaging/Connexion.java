@@ -41,14 +41,14 @@ public class Connexion  extends AsyncTask<Void,Integer, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Toast.makeText(myContext, "Connexion en cours...", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(myContext, "Connexion en cours...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onProgressUpdate(Integer... values){
         super.onProgressUpdate(values);
-        Toast.makeText(myContext, "Avancement : "+values.toString()+"/100",
-                Toast.LENGTH_SHORT).show();
+        //Toast.makeText(myContext, "Avancement : "+values.toString()+"/100",
+        //        Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "alban.crepela.channelmessaging"
-        minSdkVersion 13
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -28,4 +28,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:design:25.1.0'
     compile 'com.google.android.gms:play-services-location:10.0.1'
+    compile 'com.daimajia.easing:library:2.0@aar'
+    compile 'com.daimajia.androidanimations:library:2.2@aar'
+    compile 'com.wang.avi:library:2.1.3'
 }
