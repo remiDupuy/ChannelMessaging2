@@ -44,7 +44,7 @@ public class MessageFragment extends Fragment {
     final private int PICTURE_REQUEST_CODE = 1;
     private ListView messages;
     public static HashMap<String, Bitmap> listBitmaps = new HashMap<>();
-
+    public String channelid;
 
 
     private Button btnSend;
@@ -55,51 +55,67 @@ public class MessageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_message_fragment, container);
 
+        if(getActivity().getIntent().getStringExtra("channelID") == null) {
+            channelid = "1";
+        } else {
+            channelid = getActivity().getIntent().getStringExtra("channelID");
+        }
 
-        messages = (ListView)getActivity().findViewById(R.id.listViewMessages);
+        messages = (ListView)v.findViewById(R.id.listViewMessages);
 
         SharedPreferences settings = getActivity().getSharedPreferences(LoginActivity.PREFS_NAME, 0);
         String accesstoken = settings.getString("accesstoken","");
 
-        final HashMap<String, String> params = new HashMap<String, String>();
+        final HashMap<String, String> params = new HashMap<>();
         params.put("accesstoken",accesstoken);
-        params.put("channelid", getActivity().getIntent().getStringExtra("channelID"));
+
+
+
         final Handler handler = new Handler();
 
         final Runnable r = new Runnable() {
             public void run() {
+                if(getActivity() != null) {
+                    params.put("channelid", channelid);
+                    Connexion connexion = new Connexion(getActivity().getApplicationContext(), params, "http://www.raphaelbischof.fr/messaging/?function=getmessages");
 
 
-                Connexion connexion = new Connexion(getActivity().getApplicationContext(), params, "http://www.raphaelbischof.fr/messaging/?function=getmessages");
+                    connexion.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
+                        @Override
+                        public void onDownloadCompleted(String content) {
+                            //déserialisation
+                            Gson gson = new Gson();
+                            MessagesContainer obj = gson.fromJson(content, MessagesContainer.class);
+                            // save index and top position
+
+                            int index = messages.getFirstVisiblePosition();
+
+                            View v = messages.getChildAt(0);
+                            int top = (v == null) ? 0 : (v.getTop() - messages.getPaddingTop());
+
+                            if(getActivity() != null) {
+                                MessageArrayAdapter adapter = new MessageArrayAdapter(getActivity().getApplicationContext(), obj.getMessages());
+                                messages.setAdapter(adapter);
+                            }
 
 
-                connexion.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
-                    @Override
-                    public void onDownloadCompleted(String content) {
-                        //déserialisation
-                        Gson gson = new Gson();
-                        MessagesContainer obj = gson.fromJson(content, MessagesContainer.class);
-                        // save index and top position
+                            // restore index and position
 
-                        int index = messages.getFirstVisiblePosition();
+                            messages.setSelectionFromTop(index, top);
 
-                        View v = messages.getChildAt(0);
-                        int top = (v == null) ? 0 : (v.getTop() - messages.getPaddingTop());
+                        }
+                    });
+                    connexion.execute();
 
-                        MessageArrayAdapter adapter = new MessageArrayAdapter(getActivity().getApplicationContext(), obj.getMessages());
-                        messages.setAdapter(adapter);
-
-                        // restore index and position
-
-                        messages.setSelectionFromTop(index, top);
-
-                    }
-                });
-                connexion.execute();
+                    handler.postDelayed(this, 1000);
+                }
 
 
 
-                handler.postDelayed(this, 1000);
+
+
+
+
             }
         };
 
@@ -136,8 +152,8 @@ public class MessageFragment extends Fragment {
 
 
 
-        btnSend = (Button)getActivity().findViewById(R.id.btnSend);
-        txtSend = (EditText)getActivity().findViewById(R.id.txtSend);
+        btnSend = (Button)v.findViewById(R.id.btnSend);
+        txtSend = (EditText)v.findViewById(R.id.txtSend);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,7 +163,7 @@ public class MessageFragment extends Fragment {
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("accesstoken",accesstoken);
-                params.put("channelid", getActivity().getIntent().getStringExtra("channelID"));
+                params.put("channelid", channelid);
                 params.put("message", txtSend.getText().toString());
 
                 Connexion connexion = new Connexion(getActivity().getApplicationContext(), params, "http://www.raphaelbischof.fr/messaging/?function=sendmessage");
@@ -162,7 +178,7 @@ public class MessageFragment extends Fragment {
 
 
 
-        btnPhoto = (FloatingActionButton)getActivity().findViewById(R.id.btnGPS);
+        btnPhoto = (FloatingActionButton)v.findViewById(R.id.btnGPS);
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

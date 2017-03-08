@@ -17,6 +17,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
+            android:listSelector="@android:color/darker_gray"
             android:layout_below="@+id/btnAmis" />
 
         <Button

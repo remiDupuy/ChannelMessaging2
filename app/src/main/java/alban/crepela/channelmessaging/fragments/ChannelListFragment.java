@@ -1,5 +1,6 @@
 package alban.crepela.channelmessaging.fragments;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,7 +39,9 @@ public class ChannelListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.channellistfragment, container);
 
-        channels = (ListView)getActivity().findViewById(R.id.listViewChannelsFragment);
+
+
+        channels = (ListView)v.findViewById(R.id.listViewChannelsFragment);
         channels.setOnItemClickListener((ChannelListActivity)getActivity());
 
         SharedPreferences settings = getActivity().getSharedPreferences(LoginActivity.PREFS_NAME, 0);
@@ -66,7 +69,7 @@ public class ChannelListFragment extends Fragment {
             }
         });
 
-        btnAmis = (Button)getActivity().findViewById(R.id.btnAmis);
+        btnAmis = (Button)v.findViewById(R.id.btnAmis);
 
         btnAmis.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,8 +83,5 @@ public class ChannelListFragment extends Fragment {
         return v;
 
     }
-
-
-
 
 }

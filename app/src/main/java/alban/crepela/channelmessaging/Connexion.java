@@ -47,8 +47,6 @@ public class Connexion  extends AsyncTask<Void,Integer, String> {
     @Override
     protected void onProgressUpdate(Integer... values){
         super.onProgressUpdate(values);
-        Toast.makeText(myContext, "Avancement : "+values.toString()+"/100",
-                Toast.LENGTH_SHORT).show();
     }
 
     @Override

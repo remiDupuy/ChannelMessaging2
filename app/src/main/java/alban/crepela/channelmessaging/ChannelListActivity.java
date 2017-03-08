@@ -1,5 +1,6 @@
 package alban.crepela.channelmessaging;
 
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -32,6 +33,7 @@ public class ChannelListActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         ChannelListFragment frag1 = (ChannelListFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentChannelList);
         MessageFragment frag2 = (MessageFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentMessages);
         if(frag2 == null ||!frag2.isInLayout()) {
@@ -40,7 +42,8 @@ public class ChannelListActivity extends AppCompatActivity implements AdapterVie
             intentMsg.putExtra("channelID", channel.getChannelID());
             startActivity(intentMsg);
         } else {
-
+            Channel channel = (Channel)frag1.channels.getItemAtPosition(position);
+            frag2.channelid = channel.getChannelID();
         }
 
     }
