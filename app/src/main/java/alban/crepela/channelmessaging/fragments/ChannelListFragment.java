@@ -41,6 +41,7 @@ public class ChannelListFragment extends Fragment {
 
 
 
+
         channels = (ListView)v.findViewById(R.id.listViewChannelsFragment);
         channels.setOnItemClickListener((ChannelListActivity)getActivity());
 
