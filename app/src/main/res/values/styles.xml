@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -21,12 +21,20 @@
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
         <!-- Hint color et label color si pas de focus -->
-        <item name="android:textColorHint">@color/gray</item>
+        <item name="android:textColorHint">@color/white</item>
         <item name="android:textSize">20sp</item>
         <!-- bar color -->
         <item name="colorControlNormal">@color/colorPrimaryDark</item>
         <!-- Label color si focus -->
         <item name="colorControlActivated">@color/button</item>
+    </style>
+
+    
+    <style name="LoginPage" parent="AppTheme">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowTitleSize">0dp</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
 </resources>

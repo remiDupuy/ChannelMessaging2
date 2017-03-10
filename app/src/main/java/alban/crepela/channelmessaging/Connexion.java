@@ -2,6 +2,7 @@ package alban.crepela.channelmessaging;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -120,4 +121,6 @@ public class Connexion  extends AsyncTask<Void,Integer, String> {
         // Store the listener object
         this.listeners.add(listener);
     }
+
+
 }
