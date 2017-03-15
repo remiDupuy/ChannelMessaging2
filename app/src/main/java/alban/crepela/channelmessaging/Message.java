@@ -13,6 +13,16 @@ public class Message {
     private String username;
     private String messageImageUrl;
 
+    public String getSoundUrl() {
+        return soundUrl;
+    }
+
+    public void setSoundUrl(String soundUrl) {
+        this.soundUrl = soundUrl;
+    }
+
+    private String soundUrl;
+
 
 
     public String getMessageImageUrl() {

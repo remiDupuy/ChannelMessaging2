@@ -9,8 +9,17 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:name="alban.crepela.channelmessaging.fragments.MessageFragment"
+        android:name="alban.crepela.channelmessaging.fragments.ChannelListFragment"
         android:id="@+id/fragmentChannelList"
-        tools:layout="@layout/activity_message_fragment" />
+        tools:layout="@layout/channellistfragment" />
 
+
+    <fragment
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:name="alban.crepela.channelmessaging.fragments.MessageFragment"
+        android:id="@+id/fragmentMessages"
+        android:layout_gravity="center_horizontal"
+        tools:layout="@layout/activity_message_fragment" />
 </LinearLayout>

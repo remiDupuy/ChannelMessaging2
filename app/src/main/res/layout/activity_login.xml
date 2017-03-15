@@ -37,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                android:text="rdupu"
                 android:inputType="textEmailAddress"
                 android:hint="Identifiant" />
 
@@ -54,6 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                android:text="remidupuy"
                 android:inputType="textPassword"
                 android:hint="Mot de passe" />
 

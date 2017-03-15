@@ -1,23 +1,29 @@
-package alban.crepela.channelmessaging;
+package alban.crepela.channelmessaging.fragments;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,69 +43,99 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import alban.crepela.channelmessaging.ChannelActivity;
+import alban.crepela.channelmessaging.Connexion;
+import alban.crepela.channelmessaging.Friend;
+import alban.crepela.channelmessaging.LoginActivity;
+import alban.crepela.channelmessaging.Message;
+import alban.crepela.channelmessaging.MessageArrayAdapter;
+import alban.crepela.channelmessaging.MessagesContainer;
+import alban.crepela.channelmessaging.OnDownloadCompleteListener;
+import alban.crepela.channelmessaging.R;
+import alban.crepela.channelmessaging.SoundRecordDialog;
+import alban.crepela.channelmessaging.UploadFileToServer;
+import alban.crepela.channelmessaging.UserDataSource;
 
-public class ChannelActivity extends AppCompatActivity {
+public class MessageFragment extends Fragment {
 
+    private static final String TAG = MessageFragment.class.getSimpleName();
     final private int PICTURE_REQUEST_CODE = 1;
     private ListView messages;
     public static HashMap<String, Bitmap> listBitmaps = new HashMap<>();
-
+    public String channelid;
 
 
     private Button btnSend;
     private EditText txtSend;
     private FloatingActionButton btnPhoto;
+    private FloatingActionButton btnSound;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_message_fragment, container);
 
+        if(getActivity().getIntent().getStringExtra("channelID") == null) {
+            channelid = "1";
+        } else {
+            channelid = getActivity().getIntent().getStringExtra("channelID");
+        }
 
-        messages = (ListView) findViewById(R.id.listViewMessages);
+        messages = (ListView)v.findViewById(R.id.listViewMessages);
 
-        SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, 0);
+        SharedPreferences settings = getActivity().getSharedPreferences(LoginActivity.PREFS_NAME, 0);
         String accesstoken = settings.getString("accesstoken","");
 
-        final HashMap<String, String> params = new HashMap<String, String>();
+        final HashMap<String, String> params = new HashMap<>();
         params.put("accesstoken",accesstoken);
-        params.put("channelid", getIntent().getStringExtra("channelID"));
+
+
+
         final Handler handler = new Handler();
 
         final Runnable r = new Runnable() {
             public void run() {
+                if(getActivity() != null) {
+                    params.put("channelid", channelid);
+                    Connexion connexion = new Connexion(getActivity().getApplicationContext(), params, "http://www.raphaelbischof.fr/messaging/?function=getmessages");
 
 
-                Connexion connexion = new Connexion(getApplicationContext(), params, "http://www.raphaelbischof.fr/messaging/?function=getmessages");
+                    connexion.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
+                        @Override
+                        public void onDownloadCompleted(String content) {
+                            //déserialisation
+                            Log.d(TAG, content);
+                            Gson gson = new Gson();
+                            MessagesContainer obj = gson.fromJson(content, MessagesContainer.class);
+                            // save index and top position
+
+                            int index = messages.getFirstVisiblePosition();
+
+                            View v = messages.getChildAt(0);
+                            int top = (v == null) ? 0 : (v.getTop() - messages.getPaddingTop());
+
+                            if(getActivity() != null) {
+                                MessageArrayAdapter adapter = new MessageArrayAdapter(getActivity().getApplicationContext(), obj.getMessages());
+                                messages.setAdapter(adapter);
+                            }
 
 
-                connexion.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
-                    @Override
-                    public void onDownloadCompleted(String content) {
-                        //déserialisation
-                        Gson gson = new Gson();
-                        MessagesContainer obj = gson.fromJson(content, MessagesContainer.class);
-                        // save index and top position
+                            // restore index and position
 
-                        int index = messages.getFirstVisiblePosition();
+                            messages.setSelectionFromTop(index, top);
 
-                        View v = messages.getChildAt(0);
-                        int top = (v == null) ? 0 : (v.getTop() - messages.getPaddingTop());
+                        }
+                    });
+                    connexion.execute();
 
-                        MessageArrayAdapter adapter = new MessageArrayAdapter(getApplicationContext(), obj.getMessages());
-                        messages.setAdapter(adapter);
-
-                        // restore index and position
-
-                        messages.setSelectionFromTop(index, top);
-
-                    }
-                });
-                connexion.execute();
+                    handler.postDelayed(this, 1000);
+                }
 
 
 
-                handler.postDelayed(this, 1000);
+
+
+
+
             }
         };
 
@@ -110,12 +146,12 @@ public class ChannelActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Message message = (Message)messages.getItemAtPosition(position);
-                new AlertDialog.Builder(ChannelActivity.this)
+                new AlertDialog.Builder(getActivity())
                         .setTitle("Ajouter en ami")
                         .setMessage("Voulez vous ajouter "+message.getName()+ " en ami ?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                UserDataSource db = new UserDataSource(ChannelActivity.this);
+                                UserDataSource db = new UserDataSource(getActivity());
                                 db.open();
                                 Friend friend = db.createFriend(message.getUserID(), message.getName(), message.getImageUrl());
                                 System.out.println(friend);
@@ -136,21 +172,21 @@ public class ChannelActivity extends AppCompatActivity {
 
 
 
-        btnSend = (Button)findViewById(R.id.btnSend);
-        txtSend = (EditText)findViewById(R.id.txtSend);
+        btnSend = (Button)v.findViewById(R.id.btnSend);
+        txtSend = (EditText)v.findViewById(R.id.txtSend);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, 0);
+                SharedPreferences settings = getActivity().getSharedPreferences(LoginActivity.PREFS_NAME, 0);
                 String accesstoken = settings.getString("accesstoken","");
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("accesstoken",accesstoken);
-                params.put("channelid", getIntent().getStringExtra("channelID"));
+                params.put("channelid", channelid);
                 params.put("message", txtSend.getText().toString());
 
-                Connexion connexion = new Connexion(getApplicationContext(), params, "http://www.raphaelbischof.fr/messaging/?function=sendmessage");
+                Connexion connexion = new Connexion(getActivity().getApplicationContext(), params, "http://www.raphaelbischof.fr/messaging/?function=sendmessage");
                 connexion.execute();
 
                 txtSend.setText("");
@@ -162,7 +198,7 @@ public class ChannelActivity extends AppCompatActivity {
 
 
 
-        btnPhoto = (FloatingActionButton)findViewById(R.id.btnPhoto);
+        btnPhoto = (FloatingActionButton)v.findViewById(R.id.btnPhoto);
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,7 +210,7 @@ public class ChannelActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 // Android a depuis Android Nougat besoin d'un provider pour donner l'accès à un répertoire pour une autre app, cf : http://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed
-                Uri uri = FileProvider.getUriForFile(ChannelActivity.this, ChannelActivity.this.getApplicationContext().getPackageName() + ".provider", test);;
+                Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", test);;
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); //Création de l’appelà l’application appareil photo pour récupérer une image
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri); //Emplacement de l’image stockée
                 startActivityForResult(intent, PICTURE_REQUEST_CODE);
@@ -183,13 +219,24 @@ public class ChannelActivity extends AppCompatActivity {
             }
         });
 
+        btnSound = (FloatingActionButton)v.findViewById(R.id.btnSound);
+        btnSound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                SoundRecordDialog newFragment = new SoundRecordDialog();
+                newFragment.show(fm, "sound");
+            }
+        });
 
 
+
+        return v;
 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println(data);
         switch (requestCode)
@@ -198,27 +245,27 @@ public class ChannelActivity extends AppCompatActivity {
 
             case PICTURE_REQUEST_CODE :
 
-                SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, 0);
+                SharedPreferences settings = getActivity().getSharedPreferences(LoginActivity.PREFS_NAME, 0);
 
                 try {
-                    resizeFile(new File(Environment.getExternalStorageDirectory()+"/img.jpg"), ChannelActivity.this);
+                    resizeFile(new File(Environment.getExternalStorageDirectory()+"/img.jpg"), getActivity().getApplicationContext());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 List<NameValuePair> values = new ArrayList<NameValuePair>();
                 values.add(new BasicNameValuePair("accesstoken",settings.getString("accesstoken","")));
-                values.add(new BasicNameValuePair("channelid",getIntent().getStringExtra("channelID")));
+                values.add(new BasicNameValuePair("channelid",channelid));
 
-                UploadFileToServer upload = new UploadFileToServer(ChannelActivity.this, new File(Environment.getExternalStorageDirectory()+"/img.jpg").getPath(), values, new UploadFileToServer.OnUploadFileListener() {
+                UploadFileToServer upload = new UploadFileToServer(getActivity().getApplicationContext(), new File(Environment.getExternalStorageDirectory()+"/img.jpg").getPath(), values, new UploadFileToServer.OnUploadFileListener() {
                     @Override
                     public void onResponse(String result) {
-                        Toast.makeText(getApplicationContext(),"reponse",Toast.LENGTH_LONG);
+                        Toast.makeText(getActivity().getApplicationContext(),"reponse",Toast.LENGTH_LONG);
                     }
 
                     @Override
                     public void onFailed(IOException error) {
-                        Toast.makeText(getApplicationContext(),"failde",Toast.LENGTH_LONG);
+                        Toast.makeText(getActivity().getApplicationContext(),"failde",Toast.LENGTH_LONG);
                     }
                 });
                 upload.execute();
@@ -285,4 +332,5 @@ public class ChannelActivity extends AppCompatActivity {
         }
         return rotate;
     }
+
 }

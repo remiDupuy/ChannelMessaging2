@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,8 +26,10 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
         Message message = getItem(position);
         if(message.getMessageImageUrl().equals(""))
             return R.layout.messages_list_row;
-        else
+        else if(message.getSoundUrl().equals(""))
             return R.layout.messages_img_list_row;
+        else
+            return R.layout.messages_sound_list_row;
     }
 
     @Override
@@ -66,6 +69,18 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
                 new DownloadImageTask(messageViewHolder.img).execute(message.getImageUrl());
         }
 
+        if(viewHolder.viewType == R.layout.messages_sound_list_row) {
+            SoundMessageViewHolder messageViewHolder = (SoundMessageViewHolder) viewHolder;
+            messageViewHolder.txtDate.setText(message.getUserID()+" : "+message.getDate());
+
+            if(ChannelActivity.listBitmaps.containsKey((message.getImageUrl()))) {
+                Bitmap imgDl = ChannelActivity.listBitmaps.get(message.getImageUrl());
+                messageViewHolder.imgView.setImageBitmap(GetRoundedCornerBitmap.rounded(imgDl));
+            }
+            else
+                new DownloadImageTask(messageViewHolder.imgView).execute(message.getImageUrl());
+        }
+
 
         // Return the completed view to render on screen
         return convertView;
@@ -82,12 +97,20 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
             convertView.setTag(new ClassicMessageViewHolder(itemViewType, txtName, txtDate, imgView));
             return convertView;
         }
-        else {
+        else if(itemViewType == R.layout.messages_img_list_row){
             View convertView = LayoutInflater.from(getContext()).inflate(R.layout.messages_img_list_row, parent, false);
             TextView txtName = (TextView)convertView.findViewById(R.id.textViewName);
             TextView txtDate = (TextView)convertView.findViewById(R.id.textViewDate2);
             ImageView imgView = (ImageView)convertView.findViewById(R.id.imageViewPhoto);
             convertView.setTag(new ImageMessageViewHolder(itemViewType, txtName, txtDate, imgView));
+            return convertView;
+        }
+        else {
+            View convertView = LayoutInflater.from(getContext()).inflate(R.layout.messages_sound_list_row, parent, false);
+            TextView txtDate = (TextView)convertView.findViewById(R.id.txtSoundDate);
+            ImageView imgView = (ImageView)convertView.findViewById(R.id.imageViewPhoto);
+            Button btnLire = (Button)convertView.findViewById(R.id.btnReadSound);
+            convertView.setTag(new SoundMessageViewHolder(itemViewType, txtDate, imgView, btnLire));
             return convertView;
         }
     }
@@ -111,6 +134,20 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
             this.imgView = imgView;
         }
     }
+
+    public class SoundMessageViewHolder extends MessageArrayAdapterViewHolder {
+        public final TextView txtDate;
+        public final Button btnSound;
+        public final ImageView imgView;
+
+        public SoundMessageViewHolder(int viewType, TextView txtDate, ImageView imgView , Button btnSound) {
+            super(viewType);
+            this.txtDate = txtDate;
+            this.imgView = imgView;
+            this.btnSound = btnSound;
+        }
+    }
+
     public class ClassicMessageViewHolder extends MessageArrayAdapterViewHolder {
         public final TextView txtMsg;
         public final TextView txtDate;

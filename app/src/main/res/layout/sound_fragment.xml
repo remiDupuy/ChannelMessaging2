@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/sound_fragment"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:textSize="40dp"
+        android:background="@color/green_500"
+        android:text="Ajouter un son"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_height="wrap_content">
+
+        <alban.crepela.channelmessaging.Button.RecordButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/yellow_50"
+            android:text="Record"
+            android:id="@+id/sound_recordBtn"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginRight="20dp"
+            />
+
+        <alban.crepela.channelmessaging.Button.PlayButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/yellow_50"
+            android:text="Rejouer"
+            android:id="@+id/sound_replayBtn"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginRight="20dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/yellow_50"
+            android:text="Envoyer"
+            android:gravity="center"
+            android:id="@+id/sound_sendBtn"
+            android:textColor="@color/colorPrimaryDark"
+            />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
