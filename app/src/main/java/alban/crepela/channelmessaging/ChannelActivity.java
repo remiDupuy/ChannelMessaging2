@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -43,6 +44,7 @@ public class ChannelActivity extends AppCompatActivity {
     final private int PICTURE_REQUEST_CODE = 1;
     private ListView messages;
     public static HashMap<String, Bitmap> listBitmaps = new HashMap<>();
+    public static HashMap<String, MediaPlayer> listSounds = new HashMap<>();
 
 
 

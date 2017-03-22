@@ -2,6 +2,8 @@ package alban.crepela.channelmessaging;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by dupuyr on 23/01/2017.
  */
-public class MessageArrayAdapter extends ArrayAdapter<Message>{
+public class MessageArrayAdapter extends ArrayAdapter<Message> {
+
+    private MediaPlayer mdPl;
 
     public MessageArrayAdapter(Context context, List<Message> messages) {
         super(context, 0, messages);
@@ -24,18 +30,24 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
     @Override
     public int getItemViewType(int position) {
         Message message = getItem(position);
-        if(message.getMessageImageUrl().equals(""))
-            return R.layout.messages_list_row;
-        else if(message.getSoundUrl().equals(""))
-            return R.layout.messages_img_list_row;
-        else
-            return R.layout.messages_sound_list_row;
+        int retour = 0;
+        if(message.getSoundUrl().equals("")&&message.getMessageImageUrl().equals("")) {
+            retour = R.layout.messages_list_row;
+        }
+        else if(message.getSoundUrl().equals("")) {
+            retour = R.layout.messages_img_list_row;
+        }
+        else {
+            retour = R.layout.messages_sound_list_row;
+
+        }
+        return retour;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Message message = getItem(position);
+        final Message message = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null || ((MessageArrayAdapterViewHolder) convertView.getTag()).viewType != getItemViewType(position)) {
             convertView = generateRowOfType(getItemViewType(position), parent);
@@ -77,8 +89,25 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
                 Bitmap imgDl = ChannelActivity.listBitmaps.get(message.getImageUrl());
                 messageViewHolder.imgView.setImageBitmap(GetRoundedCornerBitmap.rounded(imgDl));
             }
-            else
+            else {
                 new DownloadImageTask(messageViewHolder.imgView).execute(message.getImageUrl());
+            }
+
+            if(ChannelActivity.listSounds.containsKey((message.getSoundUrl()))) {
+                ChannelActivity.listSounds.get(message.getSoundUrl());
+            }
+
+
+            ((SoundMessageViewHolder) viewHolder).btnSound.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final File soundFile = new File(Environment.getExternalStorageDirectory()+"/sound"+message.getSoundUrl().substring(message.getSoundUrl().lastIndexOf("/")));
+                    DownloadFile download = new DownloadFile(message.getSoundUrl(), message.getSoundUrl().substring(message.getSoundUrl().lastIndexOf("/")));
+                    ChannelActivity.listSounds.get(message.getSoundUrl());
+                }
+            });
+
+
         }
 
 
@@ -108,12 +137,14 @@ public class MessageArrayAdapter extends ArrayAdapter<Message>{
         else {
             View convertView = LayoutInflater.from(getContext()).inflate(R.layout.messages_sound_list_row, parent, false);
             TextView txtDate = (TextView)convertView.findViewById(R.id.txtSoundDate);
-            ImageView imgView = (ImageView)convertView.findViewById(R.id.imageViewPhoto);
+            ImageView imgView = (ImageView)convertView.findViewById(R.id.ImageView);
             Button btnLire = (Button)convertView.findViewById(R.id.btnReadSound);
             convertView.setTag(new SoundMessageViewHolder(itemViewType, txtDate, imgView, btnLire));
             return convertView;
         }
     }
+
+
 
     public class MessageArrayAdapterViewHolder {
         private final int viewType;

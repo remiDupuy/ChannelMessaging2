@@ -172,6 +172,8 @@ public class MessageFragment extends Fragment {
 
 
 
+
+
         btnSend = (Button)v.findViewById(R.id.btnSend);
         txtSend = (EditText)v.findViewById(R.id.txtSend);
         btnSend.setOnClickListener(new View.OnClickListener() {
