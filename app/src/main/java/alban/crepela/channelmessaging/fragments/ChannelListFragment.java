@@ -1,6 +1,7 @@
 package alban.crepela.channelmessaging.fragments;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -57,15 +59,19 @@ public class ChannelListFragment extends Fragment {
         connexion.setOnDownloadCompleteListener(new  OnDownloadCompleteListener() {
             @Override
             public void onDownloadCompleted(String result) {
-                System.out.println(result);
+                try {
 
-                //déserialisation
-                Gson gson = new Gson();
-                ChannelsContainer obj = gson.fromJson(result, ChannelsContainer.class);
+                    //déserialisation
+                    Gson gson = new Gson();
+                    ChannelsContainer obj = gson.fromJson(result, ChannelsContainer.class);
 
 
-                ChannelArrayAdapter adapter = new ChannelArrayAdapter(getActivity().getApplicationContext(), obj.getChannels());
-                channels.setAdapter(adapter);
+                    ChannelArrayAdapter adapter = new ChannelArrayAdapter(getActivity().getApplicationContext(), obj.getChannels());
+                    channels.setAdapter(adapter);
+
+                } catch (Exception e) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Aucune connexion", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });

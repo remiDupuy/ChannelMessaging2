@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
@@ -69,6 +70,7 @@ public class MessageFragment extends Fragment {
     private EditText txtSend;
     private FloatingActionButton btnPhoto;
     private FloatingActionButton btnSound;
+    private boolean mDestroyRun;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,31 +104,38 @@ public class MessageFragment extends Fragment {
                     connexion.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
                         @Override
                         public void onDownloadCompleted(String content) {
-                            //déserialisation
-                            Log.d(TAG, content);
-                            Gson gson = new Gson();
-                            MessagesContainer obj = gson.fromJson(content, MessagesContainer.class);
-                            // save index and top position
 
-                            int index = messages.getFirstVisiblePosition();
+                            try {
+                                //déserialisation
+                                Gson gson = new Gson();
+                                MessagesContainer obj = gson.fromJson(content, MessagesContainer.class);
+                                // save index and top position
 
-                            View v = messages.getChildAt(0);
-                            int top = (v == null) ? 0 : (v.getTop() - messages.getPaddingTop());
+                                int index = messages.getFirstVisiblePosition();
 
-                            if(getActivity() != null) {
-                                MessageArrayAdapter adapter = new MessageArrayAdapter(getActivity().getApplicationContext(), obj.getMessages());
-                                messages.setAdapter(adapter);
+                                View v = messages.getChildAt(0);
+                                int top = (v == null) ? 0 : (v.getTop() - messages.getPaddingTop());
+
+                                if (getActivity() != null) {
+                                    MessageArrayAdapter adapter = new MessageArrayAdapter(getActivity().getApplicationContext(), obj.getMessages());
+                                    messages.setAdapter(adapter);
+                                }
+
+
+                                // restore index and position
+
+                                messages.setSelectionFromTop(index, top);
+
+                            } catch (Exception e) {
+                                Toast.makeText(getActivity().getApplicationContext(), "Aucune connexion", Toast.LENGTH_SHORT).show();
                             }
-
-
-                            // restore index and position
-
-                            messages.setSelectionFromTop(index, top);
 
                         }
                     });
                     connexion.execute();
 
+                    
+                    if(!mDestroyRun)
                     handler.postDelayed(this, 1000);
                 }
 
@@ -235,6 +244,12 @@ public class MessageFragment extends Fragment {
 
         return v;
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDestroyRun = true;
     }
 
     @Override

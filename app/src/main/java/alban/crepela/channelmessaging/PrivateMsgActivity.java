@@ -54,14 +54,19 @@ public class PrivateMsgActivity extends AppCompatActivity {
                 connexion.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
                     @Override
                     public void onDownloadCompleted(String result) {
-                        //déserialisation
-                        Gson gson = new Gson();
-                        PrivateMsgContainer obj = gson.fromJson(result, PrivateMsgContainer.class);
+                        try {
+                            //déserialisation
+                            Gson gson = new Gson();
+                            PrivateMsgContainer obj = gson.fromJson(result, PrivateMsgContainer.class);
 
-                        if(!obj.getMessages().equals(messagesBackUp)) {
-                            adapter.clear();
-                            adapter.addAll(obj.getMessages());
-                            adapter.notifyDataSetChanged();
+                            if (!obj.getMessages().equals(messagesBackUp)) {
+                                adapter.clear();
+                                adapter.addAll(obj.getMessages());
+                                adapter.notifyDataSetChanged();
+                            }
+
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Aucune connexion", Toast.LENGTH_SHORT).show();
                         }
 
                     }

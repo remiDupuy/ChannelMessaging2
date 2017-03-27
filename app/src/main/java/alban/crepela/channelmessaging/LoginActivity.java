@@ -120,27 +120,41 @@ public class LoginActivity extends AppCompatActivity implements OnDownloadComple
 
     @Override
     public void onDownloadCompleted(String result) {
-
-        //déserialisation
-        Gson gson = new Gson();
-        Reponse obj = gson.fromJson(result, Reponse.class);
-
-        if(obj.getResponse().equals("Ok")){
-
-            //Shared preferences
-            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("accesstoken", obj.getAccesstoken());
-            // Commit the edits!
-            editor.commit();
+        try{
+            //déserialisation
+            Gson gson = new Gson();
+            Reponse obj = gson.fromJson(result, Reponse.class);
 
 
-            Intent loginIntent = new Intent(LoginActivity.this, ChannelListActivity.class);
-            startActivity(loginIntent, ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this, mIvLogo, "logo").toBundle());
-            btnValider.setVisibility(View.VISIBLE);
-            avi.hide();
-        }
-        else{
+            if(obj.getResponse().equals("Ok")){
+
+                //Shared preferences
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("accesstoken", obj.getAccesstoken());
+                // Commit the edits!
+                editor.commit();
+
+
+                Intent loginIntent = new Intent(LoginActivity.this, ChannelListActivity.class);
+                startActivity(loginIntent, ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this, mIvLogo, "logo").toBundle());
+                btnValider.setVisibility(View.VISIBLE);
+                avi.hide();
+            }
+            else{
+                btnValider.setVisibility(View.VISIBLE);
+                avi.hide();
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.llBackground), "Erreur", Snackbar.LENGTH_SHORT);
+                mySnackbar.setAction("Réessayer", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        connect();
+                    }
+                });
+                mySnackbar.show();
+            }
+
+        } catch(Exception e) {
             btnValider.setVisibility(View.VISIBLE);
             avi.hide();
             Snackbar mySnackbar = Snackbar.make(findViewById(R.id.llBackground), "Erreur", Snackbar.LENGTH_SHORT);

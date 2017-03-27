@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +47,7 @@ public class ChannelActivity extends AppCompatActivity {
     public static HashMap<String, Bitmap> listBitmaps = new HashMap<>();
     public static HashMap<String, MediaPlayer> listSounds = new HashMap<>();
 
-
+    private boolean mDestroyRun = false;
 
     private Button btnSend;
     private EditText txtSend;
@@ -78,30 +79,33 @@ public class ChannelActivity extends AppCompatActivity {
                 connexion.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
                     @Override
                     public void onDownloadCompleted(String content) {
-                        //déserialisation
-                        Gson gson = new Gson();
-                        MessagesContainer obj = gson.fromJson(content, MessagesContainer.class);
-                        // save index and top position
+                        try {
+                            //déserialisation
+                            Gson gson = new Gson();
+                            MessagesContainer obj = gson.fromJson(content, MessagesContainer.class);
+                            // save index and top position
 
-                        int index = messages.getFirstVisiblePosition();
+                            int index = messages.getFirstVisiblePosition();
 
-                        View v = messages.getChildAt(0);
-                        int top = (v == null) ? 0 : (v.getTop() - messages.getPaddingTop());
+                            View v = messages.getChildAt(0);
+                            int top = (v == null) ? 0 : (v.getTop() - messages.getPaddingTop());
 
-                        MessageArrayAdapter adapter = new MessageArrayAdapter(getApplicationContext(), obj.getMessages());
-                        messages.setAdapter(adapter);
+                            MessageArrayAdapter adapter = new MessageArrayAdapter(getApplicationContext(), obj.getMessages());
+                            messages.setAdapter(adapter);
 
-                        // restore index and position
+                            // restore index and position
 
-                        messages.setSelectionFromTop(index, top);
+                            messages.setSelectionFromTop(index, top);
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Aucune connexion", Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                 });
                 connexion.execute();
-
-
-
-                handler.postDelayed(this, 1000);
+                System.out.println("run");
+                if(!mDestroyRun)
+                    handler.postDelayed(this, 1000);
             }
         };
 
@@ -188,6 +192,12 @@ public class ChannelActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDestroyRun = true;
     }
 
     @Override

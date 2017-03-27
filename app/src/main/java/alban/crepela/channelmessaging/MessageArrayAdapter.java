@@ -102,7 +102,7 @@ public class MessageArrayAdapter extends ArrayAdapter<Message> {
                 @Override
                 public void onClick(View v) {
                     final File soundFile = new File(Environment.getExternalStorageDirectory()+"/sound"+message.getSoundUrl().substring(message.getSoundUrl().lastIndexOf("/")));
-                    DownloadFile download = new DownloadFile(message.getSoundUrl(), message.getSoundUrl().substring(message.getSoundUrl().lastIndexOf("/")));
+                   // DownloadFile download = new DownloadFile(message.getSoundUrl(), message.getSoundUrl().substring(message.getSoundUrl().lastIndexOf("/")));
                     ChannelActivity.listSounds.get(message.getSoundUrl());
                 }
             });
